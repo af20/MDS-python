@@ -57,7 +57,6 @@ def libg_get_if_distibution_is_normal(sample1):
   stat,pvalue = stats.normaltest(sample1)
   pvalue_adj = max(0.000000001, pvalue) # 1 miliardo
   score = int(1/pvalue_adj)
-  print(stat,pvalue,pvalue_adj,score)
 
   min_score_for_normality_of_distribution = 100
   if score >= min_score_for_normality_of_distribution:
