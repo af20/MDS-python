@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 from ML.ETL import do_ETL
+from ML.classes import *
 '''
   (1) ETL processing (veloce) - poca manipolaz (one hot enc)
     dati mancanti ce ne so alcuni, risolvibili con drop
@@ -42,4 +43,10 @@ from ML.ETL import do_ETL
       distribuz. misure perf (box-plot) o media, stdev performance
 '''
 
-Matrix, v_stoke = do_ETL()
+df, Matrix, v_stroke = do_ETL()
+X_train, X_test, y_train, y_test = train_test_split(Matrix, v_stroke, test_size = 0.2, random_state = 42)
+
+#PERCEPTRON = c_Perceptron(X_train, X_test, y_train, y_test)
+#print(PERCEPTRON.f1_score)
+
+LOGISTIC_REGRESSION = c_Logistic_Regression(X_train, X_test, y_train, y_test, 0.9)

@@ -22,9 +22,10 @@ def do_ETL():
   import numpy as np
 
 
+
   df = pd.read_csv('ML/healthcare-dataset-stroke-data.csv')
-  v_stoke = df['stroke'].tolist()
   df.dropna(subset=['bmi'], inplace=True)
+  v_stroke = df['stroke'].tolist()
   df.drop(columns=['id', 'stroke'], inplace=True)
   # df.hist(figsize=(22,9)); plt.show()
 
@@ -69,7 +70,41 @@ def do_ETL():
 
   # Calcolo la feature matrix
   Matrix = data_preprocessing.fit_transform(df)
-  return Matrix, v_stoke
+
+  '''
+    # Imbalanced class (da applicare solo sul training)
+    from imblearn.over_sampling import RandomOverSampler
+    from imblearn.under_sampling import RandomUnderSampler
+    from imblearn.under_sampling import TomekLinks # I Tomek links sonon coppie di istanze molto vicine ma di classi opposte. Rimuovendo le istanze della classe maggioritaria si accresce lo spazio tra le classi
+
+    rus = RandomUnderSampler()
+    ros = RandomOverSampler()
+    X_rus, y_rus = rus.fit_sample(X_fake, y_fake)
+    print(np.unique(y_rus, return_counts=True)[1])
+
+    tl = TomekLinks(sampling_strategy='majority')
+    X_tl, y_tl = tl.fit_sample(X_fake, y_fake)
+
+    from imblearn.over_sampling import SMOTE # (Synthetic Minority Oversampling TEchnique) genera elementi sintetici della classe minoritaria, basandosi su qulli che esistono gia'. Scegliendo in modo casuale un punto della classe minoritaria, ricerca i k punti della stessa classe piu' vicini - k-nearest neighbors - e genera un punto tra gli estremi identificati.
+    smote = SMOTE(sampling_strategy='minority')
+    X_sm, y_sm = smote.fit_sample(X, y)
+
+
+    from imblearn.pipeline import make_pipeline as mp
+    from sklearn.svm import SVC, LinearSVC
+    pipe = mp(
+      SMOTE(),
+      SVC()
+    )
+
+    from sklearn.utils.class_weight import compute_class_weight # Nel caso non si volesse ricampionare i dati, si possono incorporare i pesi delle classi nella funzione di costo, assegnando alla classe di minoranza un peso maggiore. Scikit-learn SKL fornisce una funzione per calcolare i pesi in base alla distribuzione delle classi
+    weights = compute_class_weight('balanced', np.unique(y_fake), y_fake)
+  '''
+
+
+  
+
+  return df, Matrix, v_stroke
 
 '''
   da scalare (check normalità)
